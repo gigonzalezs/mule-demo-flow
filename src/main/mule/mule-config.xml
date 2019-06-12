@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mule xmlns:demo02="http://www.mulesoft.org/schema/mule/demo02" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/demo02 http://www.mulesoft.org/schema/mule/demo02/current/mule-demo02.xsd">
+    <configuration-properties file="mule-artifact.properties"/>
+    <http:listener-config doc:id="f8986870-cc19-41e5-af29-80b61ef02a3e" doc:name="CloudHub HTTP" doc:timestamp="1560189738712" name="cloudhub_http">
+        <http:listener-connection host="0.0.0.0" port="${http.port}"/>
+    </http:listener-config>
+    <demo02:config name="Demo02_Config" doc:name="Demo02 Config" doc:id="935280b0-5702-4563-830b-b67f3da11996" configId="dos" >
+		<demo02:connection requiredParameter="uno" optionalParameter="2017" />
+	</demo02:config>
+	<flow doc:id="a364331e-47c9-4375-a172-a3ca9b9e0328" doc:name="HTTP to JSON" doc:timestamp="1560189514776" name="http_to_json">
+        <http:listener allowedMethods="POST" config-ref="cloudhub_http" doc:id="aeaf2f39-8008-403a-8ceb-e4c11a6f1911" doc:name="Listener" doc:timestamp="1560195227999" outputMimeType="application/json" path="/test">
+            <http:response statusCode="201"/>
+        </http:listener>
+        <ee:transform doc:id="a83edb59-1b85-4d57-9901-4eb3c9ebf8ed" doc:name="Transform" doc:timestamp="1560191468213">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json  
+---
+{
+  cedula: payload.cedula,
+  nombre: upper(payload.nombre)
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <logger doc:id="af82ead6-b521-4b92-a2fd-180dcd11bf31" doc:name="Logger" doc:timestamp="1560195306028" level="INFO" message="#[&quot;received payload: &quot; ++ payload.cedula ++ &quot;, &quot; ++ payload.nombre]"/>
+		<demo02:say-goodbye doc:name="Say goodbye" doc:id="2cb86abd-d32e-4c9c-813d-53b0cb98305c" person="Pepetrueno"/>
+		<logger level="INFO" doc:name="Logger" doc:id="aa0d2fc0-2c3d-407b-8a49-f3e748ba72cb" message='"demo extension: " ++ payload'/>
+    </flow>
+</mule>

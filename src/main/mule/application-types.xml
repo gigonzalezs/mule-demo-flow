@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="Persona" format="json">
+      <types:example format="json"><![CDATA[{
+  "cedula": 1,
+  "nombre": "pepe"
+}]]></types:example>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#aeaf2f39-8008-403a-8ceb-e4c11a6f1911">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="Persona"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#a83edb59-1b85-4d57-9901-4eb3c9ebf8ed">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="Persona"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
